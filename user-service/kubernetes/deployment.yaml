@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: user-service
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+        name: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: mahendraintelops/test-project-v11/user-service
+          imagePullPolicy: Always
+        
+          env:
+            - name: SERVICE_NAME
+              value: "go-app"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "localhost:4317"
+            - name: INSECURE_MODE
+              value: "true"
+        
+          ports:
+        
+        
+          - containerPort: 3444
+            name: http
+        
+        
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+        
